@@ -82,6 +82,14 @@ jobs:
         condition: and(succeeded(), eq(variables.isTagTriggered, 'True'))
         artifact: drop-extension
 
+      - task: NuGetCommand@2
+        displayName: Publish package to MyGet
+        inputs:
+          command: 'push'
+          packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+          nuGetFeedType: 'external'
+          publishFeedCredentials: 'MyGetConnection'
+
   - job: buildJavaBindings
     displayName: Build Java library
     steps:
